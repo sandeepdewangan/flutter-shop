@@ -1,31 +1,29 @@
+import 'package:eshop/models/product.dart';
 import 'package:eshop/screens/product_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SingleProduct extends StatelessWidget {
 
-  final String id;
-  final String title;
-  final String imageUrl;
-
-
-  SingleProduct({@required this.id, @required this.title, @required this.imageUrl});
-
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
         child: GestureDetector(
             onTap: (){
-              Navigator.of(context).pushNamed(ProductDetailScreen.routeName, arguments: id);
+              Navigator.of(context).pushNamed(ProductDetailScreen.routeName, arguments: product.id);
             },
-            child: Image.network(imageUrl,)
+            child: Image.network(product.imgeUrl,)
         ),
         footer: GridTileBar(
           leading: IconButton(
-            icon: Icon(Icons.favorite),
+            icon: Icon(product.isFavorite ? Icons.favorite: Icons.favorite_border),
             color: Theme.of(context).accentColor,
-            onPressed: (){},
+            onPressed: (){
+              product.toggleFavorite();
+            },
           ),
           trailing: IconButton(
             icon: Icon(Icons.shopping_cart),
@@ -34,7 +32,7 @@ class SingleProduct extends StatelessWidget {
           ),
           backgroundColor: Colors.black54,
           title: Text(
-            title,
+            product.title,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 15.0,

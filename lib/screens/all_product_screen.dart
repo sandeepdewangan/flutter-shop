@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AllProductScreen extends StatelessWidget {
-
   static const routeName = 'all-product';
 
   @override
   Widget build(BuildContext context) {
-    final productsData =  Provider.of<Products>(context);
+    final productsData = Provider.of<Products>(context);
     final products = productsData.items;
 
     return Scaffold(
@@ -19,8 +18,12 @@ class AllProductScreen extends StatelessWidget {
       ),
       body: GridView.builder(
         itemCount: products.length,
-        itemBuilder: (context, index) => SingleProduct(id: products[index].id, title: products[index].title, imageUrl: products[index].imgeUrl,),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
+        itemBuilder: (context, index) => ChangeNotifierProvider(
+          create: (context) => products[index],
+            child: SingleProduct()
+        ),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
       ),
     );
   }

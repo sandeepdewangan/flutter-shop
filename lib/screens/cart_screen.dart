@@ -49,6 +49,43 @@ class CartScreen extends StatelessWidget {
               ),
             ),
           ),
+          // all products
+          Expanded(
+            child: ListView.builder(
+              itemCount: cart.items.length,
+              itemBuilder: (ctx, index){
+                return Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Product image
+                        CircleAvatar(
+                          child: Icon(Icons.shopping_cart),
+                        ),
+                        // Product title and unit price
+                        SizedBox(width: 10,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(cart.items.values.toList()[index].title),
+                            Text('Rs. ${cart.items.values.toList()[index].price.toString()}'),
+                          ],
+                        ),
+                        Spacer(),
+                        // Qty
+                        Chip(label: Text('x ${cart.items.values.toList()[index].quantity}', style: TextStyle(color: Colors.white),), backgroundColor: Theme.of(context).primaryColor,),
+                        SizedBox(width: 15,),
+                        // Final price
+                        Text('Rs. ${cart.items.values.toList()[index].price * cart.items.values.toList()[index].quantity}'),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

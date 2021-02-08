@@ -1,4 +1,6 @@
 import 'package:eshop/providers/cart.dart';
+import 'package:eshop/providers/order.dart';
+import 'package:eshop/widgets/app_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +41,10 @@ class CartScreen extends StatelessWidget {
                         ),
                       )),
                   FlatButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Provider.of<Orders>(context, listen: false).addOrder(cart.items.values.toList(), cart.totalAmount);
+                        cart.clearCart();
+                      },
                       child: Text(
                         'ORDER NOW',
                         style: TextStyle(
@@ -117,6 +122,7 @@ class CartScreen extends StatelessWidget {
           ),
         ],
       ),
+      drawer: AppDrawer(),
     );
   }
 }

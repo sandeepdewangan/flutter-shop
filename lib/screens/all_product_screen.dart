@@ -2,6 +2,7 @@ import 'package:eshop/models/product.dart';
 import 'package:eshop/providers/cart.dart';
 import 'package:eshop/providers/product.dart';
 import 'package:eshop/screens/cart_screen.dart';
+import 'package:eshop/widgets/app_drawer.dart';
 import 'package:eshop/widgets/single_product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +79,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
       ),
+      drawer: AppDrawer(),
     );
   }
 }

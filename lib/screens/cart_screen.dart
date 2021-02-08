@@ -116,6 +116,18 @@ class CartScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+                  confirmDismiss: (_){
+                    return showDialog(
+                        context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: Text('Are you sure to delete product from cart?'),
+                        actions: [
+                          FlatButton(onPressed: (){ Navigator.of(context).pop(true); }, child: Text('Yes')),
+                          FlatButton(onPressed: (){ Navigator.of(context).pop(false); }, child: Text('No')),
+                        ],
+                      ),
+                    );
+                  },
                 );
               },
             ),

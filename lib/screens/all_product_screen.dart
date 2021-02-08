@@ -1,6 +1,7 @@
 import 'package:eshop/models/product.dart';
 import 'package:eshop/providers/cart.dart';
 import 'package:eshop/providers/product.dart';
+import 'package:eshop/screens/cart_screen.dart';
 import 'package:eshop/widgets/single_product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,11 @@ class _AllProductScreenState extends State<AllProductScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Icon(Icons.shopping_cart),
+                  //IconButton(icon: Icon(Icons.shopping_cart), onPressed: ()=> Navigator.of(context).pushNamed(CartScreen.routeName)),
+                  GestureDetector(
+                    onTap: ()=> Navigator.of(context).pushNamed(CartScreen.routeName),
+                    child: Icon(Icons.shopping_cart),
+                  ),
                   Text(cart.itemCount.toString(), textAlign: TextAlign.start,)
                 ],
               ),

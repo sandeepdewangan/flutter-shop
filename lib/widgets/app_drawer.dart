@@ -1,5 +1,6 @@
 import 'package:eshop/screens/all_product_screen.dart';
 import 'package:eshop/screens/cart_screen.dart';
+import 'package:eshop/screens/manage_products.dart';
 import 'package:eshop/screens/order_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,11 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.card_travel),
             title: Text('Orders'),
             onTap: () => Navigator.of(context).pushNamed(OrdersScreen.routeName),
+          ),
+          ListTile(
+            leading: Icon(Icons.description),
+            title: Text('Manage Products'),
+            onTap: () => Navigator.of(context).pushNamed(ManageProducts.routeName),
           ),
           ListTile(
             leading: Icon(Icons.more),

@@ -3,6 +3,7 @@ import 'package:eshop/providers/product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = 'edit-product';
@@ -16,12 +17,31 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageURLFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
   var _editedProduct =
-      Product(id: null, title: '', description: '', price: 0, imgeUrl: '');
+      Product(id: '', title: '', description: '', price: 0, imgeUrl: '');
+  var _isInit = true;
 
   @override
   void initState() {
     _imageURLFocusNode.addListener(_updateImageUrl);
     super.initState();
+  }
+
+  /*
+  initState is called only once for a widget. didChangeDependencies may be called multiple times per widget lifecycle.
+didChangeDependencies() Called when a dependency of this [State] object changes.
+   */
+
+  @override
+  void didChangeDependencies() {
+    if(_isInit){
+      final productId = ModalRoute.of(context).settings.arguments as String;
+      if(productId != null){
+        _editedProduct = Provider.of<Products>(context, listen: false).findById(productId);
+        _imageURLController.text = _editedProduct.imgeUrl;
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -43,7 +63,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _form.currentState.save();
-    Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    if(_editedProduct.id != null){
+      // update
+      Provider.of<Products>(context, listen: false).updateProduct(_editedProduct.id, _editedProduct);
+    }else{
+      Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    }
     Navigator.of(context).pop();
   }
 
@@ -63,6 +88,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           child: ListView(
             children: [
               TextFormField(
+                initialValue: _editedProduct.title,
                 decoration: InputDecoration(
                   labelText: "Title",
                 ),
@@ -83,6 +109,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _editedProduct.price.toString(),
                 decoration: InputDecoration(
                   labelText: "Price",
                 ),
@@ -107,6 +134,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _editedProduct.description,
                 decoration: InputDecoration(
                   labelText: "Description",
                 ),

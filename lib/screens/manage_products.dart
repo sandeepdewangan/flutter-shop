@@ -33,7 +33,7 @@ class ManageProducts extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         IconButton(icon: Icon(Icons.edit, color: Colors.purple,), onPressed: ()=> Navigator.of(context).pushNamed(EditProductScreen.routeName, arguments: products.items[index].id)),
-                        IconButton(icon: Icon(Icons.delete, color: Colors.red, ), onPressed: (){}),
+                        IconButton(icon: Icon(Icons.delete, color: Colors.red, ), onPressed: () => Provider.of<Products>(context, listen: false).removeProduct(products.items[index].id)),
                       ],
                     ),
                   ),

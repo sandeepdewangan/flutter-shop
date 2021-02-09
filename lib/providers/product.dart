@@ -40,4 +40,9 @@ class Products with ChangeNotifier{
     return _items.firstWhere((item) => item.id == id);
   }
 
+  void removeProduct(String id){
+    _items.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
+
 }

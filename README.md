@@ -14,3 +14,23 @@
 3. PATCH -> Update data
 4. PUT -> Replace data
 5. DELETE -> Delete data
+
+## FutureBuilder
+Use future builder to render widgets which needs to be fetched from web server. (eg. all products)
+
+```dart 
+    FutureBuilder(
+        future: // a API calls for fetching of data
+        builder: (ctx, dataSnapshot) {
+            if(dataSnapshot.connectionState == ConnectionState.waiting){
+                // Progress indicator
+            }
+            else{
+                if(dataSnapshot.error !=  null){
+                    // error handle
+                }else{
+                    // return widgets ListView.builder()
+                }   
+            }
+        )
+```

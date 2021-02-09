@@ -70,7 +70,7 @@ didChangeDependencies() Called when a dependency of this [State] object changes.
     _form.currentState.save();
     if (_editedProduct.id != null) {
       // update
-       Provider.of<Products>(context, listen: false)
+       await Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
     } else {
       // add
@@ -87,11 +87,12 @@ didChangeDependencies() Called when a dependency of this [State] object changes.
             ],
           ),
         );
-      }finally{
-        Navigator.of(context).pop();
-        _isLoading = false;
       }
     }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   @override

@@ -5,43 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  List<Product> _items = [
-    Product(
-        id: '1',
-        title: 'Tee - 1',
-        description: 'A nice t shirt fits all',
-        price: 100,
-        imgeUrl:
-            "https://149360821.v2.pressablecdn.com/wp-content/uploads/2013/11/Dead-Link-T-Shirt.jpg"),
-    Product(
-        id: '2',
-        title: 'Tee - 2',
-        description: 'A nice t shirt fits all',
-        price: 200,
-        imgeUrl:
-            "https://149360821.v2.pressablecdn.com/wp-content/uploads/2013/11/Dead-Link-T-Shirt.jpg"),
-    Product(
-        id: '3',
-        title: 'Tee - 4',
-        description: 'A nice t shirt fits all',
-        price: 300,
-        imgeUrl:
-            "https://149360821.v2.pressablecdn.com/wp-content/uploads/2013/11/Dead-Link-T-Shirt.jpg"),
-    Product(
-        id: '4',
-        title: 'Tee - 3',
-        description: 'A nice t shirt fits all',
-        price: 400,
-        imgeUrl:
-            "https://149360821.v2.pressablecdn.com/wp-content/uploads/2013/11/Dead-Link-T-Shirt.jpg"),
-    Product(
-        id: '5',
-        title: 'Tee - 5',
-        description: 'A nice t shirt fits all',
-        price: 500,
-        imgeUrl:
-            "https://149360821.v2.pressablecdn.com/wp-content/uploads/2013/11/Dead-Link-T-Shirt.jpg"),
-  ];
+  List<Product> _items = [];
 
   bool _showFavoritesOnly = false;
 
@@ -55,7 +19,7 @@ class Products with ChangeNotifier {
   Future<void> addProduct(Product product) async {
     const url =
         'https://flutter-test-aed7b-default-rtdb.firebaseio.com/products.json';
-    try{
+    try {
       final response = await http.post(url,
           body: json.encode({
             'title': product.title,
@@ -73,14 +37,45 @@ class Products with ChangeNotifier {
           imgeUrl: product.imgeUrl);
       _items.add(newProduct);
       notifyListeners();
-    }catch(error){
-        print(error);
-        throw(error);
+    } catch (error) {
+      print(error);
+      throw (error);
     }
   }
 
-  void updateProduct(String id, Product product) {
+  Future<void> fetchProducts() async {
+    const url =
+        'https://flutter-test-aed7b-default-rtdb.firebaseio.com/products.json';
+    try {
+      final response = await http.get(url);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final List<Product> products = [];
+      extractedData.forEach((key, value) {
+        products.add(Product(
+            id: key,
+            title: value['title'],
+            description: value['description'],
+            price: value['price'],
+            imgeUrl: value['imageUrl']));
+      });
+      _items = products;
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
+
+  Future<void> updateProduct(String id, Product product) async{
     final index = _items.indexWhere((element) => element.id == id);
+    final url =
+        'https://flutter-test-aed7b-default-rtdb.firebaseio.com/products/$id.json';
+    await http.patch(url, body: json.encode({
+      'title': product.title,
+      'description': product.description,
+      'imageUrl': product.imgeUrl,
+      'price': product.price,
+      'isFavorite': product.isFavorite,
+    })); 
     _items[index] = product;
     notifyListeners();
   }

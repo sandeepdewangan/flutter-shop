@@ -21,6 +21,13 @@ class AllProductScreen extends StatefulWidget {
 }
 
 class _AllProductScreenState extends State<AllProductScreen> {
+
+  @override
+  void initState() {
+    Provider.of<Products>(context, listen: false).fetchProducts();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context);

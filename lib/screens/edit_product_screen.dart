@@ -17,7 +17,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageURLFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
   var _editedProduct =
-      Product(id: '', title: '', description: '', price: 0, imgeUrl: '');
+      Product(id: null, title: '', description: '', price: 0, imgeUrl: '');
   var _isInit = true;
 
   @override
@@ -67,6 +67,7 @@ didChangeDependencies() Called when a dependency of this [State] object changes.
       // update
       Provider.of<Products>(context, listen: false).updateProduct(_editedProduct.id, _editedProduct);
     }else{
+      // add
       Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
     }
     Navigator.of(context).pop();
@@ -78,7 +79,7 @@ didChangeDependencies() Called when a dependency of this [State] object changes.
       appBar: AppBar(
         title: Text('Add / Edit Product'),
         actions: [
-          IconButton(icon: Icon(Icons.save), onPressed: () => _formSave()),
+          IconButton(icon: Icon(Icons.save), onPressed: ()=> _formSave()),
         ],
       ),
       body: Padding(

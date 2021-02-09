@@ -19,6 +19,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _editedProduct =
       Product(id: null, title: '', description: '', price: 0, imgeUrl: '');
   var _isInit = true;
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -33,10 +34,11 @@ didChangeDependencies() Called when a dependency of this [State] object changes.
 
   @override
   void didChangeDependencies() {
-    if(_isInit){
+    if (_isInit) {
       final productId = ModalRoute.of(context).settings.arguments as String;
-      if(productId != null){
-        _editedProduct = Provider.of<Products>(context, listen: false).findById(productId);
+      if (productId != null) {
+        _editedProduct =
+            Provider.of<Products>(context, listen: false).findById(productId);
         _imageURLController.text = _editedProduct.imgeUrl;
       }
     }
@@ -57,20 +59,39 @@ didChangeDependencies() Called when a dependency of this [State] object changes.
     }
   }
 
-  void _formSave() {
+  void _formSave() async {
     final isValid = _form.currentState.validate();
-    if(!isValid){
+    if (!isValid) {
       return;
     }
+    setState(() {
+      _isLoading = true;
+    });
     _form.currentState.save();
-    if(_editedProduct.id != null){
+    if (_editedProduct.id != null) {
       // update
-      Provider.of<Products>(context, listen: false).updateProduct(_editedProduct.id, _editedProduct);
-    }else{
+       Provider.of<Products>(context, listen: false)
+          .updateProduct(_editedProduct.id, _editedProduct);
+    } else {
       // add
-      Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+      try{
+        await Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+      }catch(error){
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('An error occured!'),
+            content: Text('Some went wrong'),
+            actions: [
+              FlatButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('Ok')),
+            ],
+          ),
+        );
+      }finally{
+        Navigator.of(context).pop();
+        _isLoading = false;
+      }
     }
-    Navigator.of(context).pop();
   }
 
   @override
@@ -79,10 +100,10 @@ didChangeDependencies() Called when a dependency of this [State] object changes.
       appBar: AppBar(
         title: Text('Add / Edit Product'),
         actions: [
-          IconButton(icon: Icon(Icons.save), onPressed: ()=> _formSave()),
+          IconButton(icon: Icon(Icons.save), onPressed: () => _formSave()),
         ],
       ),
-      body: Padding(
+      body: _isLoading ? CircularProgressIndicator() : Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
           key: _form,
@@ -94,7 +115,7 @@ didChangeDependencies() Called when a dependency of this [State] object changes.
                   labelText: "Title",
                 ),
                 validator: (value) {
-                  if(value.isEmpty){
+                  if (value.isEmpty) {
                     return 'The field cannot be empty';
                   }
                   return null;
@@ -115,10 +136,10 @@ didChangeDependencies() Called when a dependency of this [State] object changes.
                   labelText: "Price",
                 ),
                 validator: (value) {
-                  if(value.isEmpty){
+                  if (value.isEmpty) {
                     return 'The field cannot be empty';
                   }
-                  if(double.tryParse(value) == null){
+                  if (double.tryParse(value) == null) {
                     return 'Please enter a valid number';
                   }
                   return null;
@@ -141,7 +162,7 @@ didChangeDependencies() Called when a dependency of this [State] object changes.
                 ),
                 maxLines: 3,
                 validator: (value) {
-                  if(value.isEmpty){
+                  if (value.isEmpty) {
                     return 'The field cannot be empty';
                   }
                   return null;
@@ -176,10 +197,12 @@ didChangeDependencies() Called when a dependency of this [State] object changes.
                         labelText: "Image URL",
                       ),
                       validator: (value) {
-                        if(value.isEmpty){
+                        if (value.isEmpty) {
                           return 'The field cannot be empty';
                         }
-                        if(!value.endsWith('.png') && !value.endsWith('.jpg') && !value.endsWith('.jpeg')){
+                        if (!value.endsWith('.png') &&
+                            !value.endsWith('.jpg') &&
+                            !value.endsWith('.jpeg')) {
                           return 'Please enter a valid URL';
                         }
                         return null;

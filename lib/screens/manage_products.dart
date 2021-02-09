@@ -1,10 +1,11 @@
 import 'package:eshop/providers/product.dart';
+import 'package:eshop/screens/edit_product_screen.dart';
 import 'package:eshop/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ManageProducts extends StatelessWidget {
-  static final routeName = 'manage-product';
+  static const routeName = 'manage-product';
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class ManageProducts extends StatelessWidget {
       appBar: AppBar(
         title: Text('Manage Products'),
         actions: [
-          IconButton(icon: Icon(Icons.add), onPressed: (){}),
+          IconButton(icon: Icon(Icons.add), onPressed: () => Navigator.of(context).pushNamed(EditProductScreen.routeName),),
         ],
       ),
       body: ListView.builder(

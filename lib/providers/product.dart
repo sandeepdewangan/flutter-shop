@@ -19,7 +19,9 @@ class Products with ChangeNotifier{
     return [..._items]; // return copy of list of items.
   }
 
-  void addProduct(){
+  void addProduct(Product product){
+    final newProduct = Product(id: DateTime.now().toString(), title: product.title, description: product.description, price: product.price, imgeUrl: product.imgeUrl);
+    _items.add(newProduct);
     notifyListeners();
   }
 
@@ -31,4 +33,5 @@ class Products with ChangeNotifier{
   Product findById(String id){
     return _items.firstWhere((item) => item.id == id);
   }
+
 }
